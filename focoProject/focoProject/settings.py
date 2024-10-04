@@ -135,7 +135,7 @@ STATIC_URL = 'static/'
 # STATIC_ROOT = BASE_DIR / 'staticfiles'  # Ruta donde se recopilarán los archivos estáticos al ejecutar collectstatic
 
 STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'),
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'votacion', 'static')
 
 
 # Default primary key field type
