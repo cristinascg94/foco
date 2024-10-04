@@ -29,7 +29,7 @@ SECRET_KEY = os.environ["SECRET_KEY_DJANGO"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app', '.now.sh']
+# ALLOWED_HOSTS = ['.vercel.app', '.now.sh']
 # Or * to allow all
 ALLOWED_HOSTS = ['*']
 

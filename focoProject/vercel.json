@@ -3,7 +3,15 @@
   "builds": [
     {
       "src": "focoProject/wsgi.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.10" }
+    },
+    {
+      "src": "build_files.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "staticfiles_build"
+      }
     }
   ],
   "routes": [
@@ -15,11 +23,5 @@
       "src": "/(.*)",
       "dest": "focoProject/wsgi.py"
     }
-  ],
-  "functions": {
-    "api/*.py": {
-      "runtime": "python3.10",
-      "maxLambdaSize": "15mb"
-    }
-  }
+  ]
 }
