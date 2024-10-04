@@ -29,7 +29,10 @@ SECRET_KEY = os.environ["SECRET_KEY_DJANGO"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app', '.now.sh']
+# Or * to allow all
+ALLOWED_HOSTS = ['*']
+
 
 
 # Application definition
@@ -42,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'votacion',
-    'django_sass'
 ]
 
 MIDDLEWARE = [
@@ -129,8 +131,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']  # Ruta para los archivos estáticos en desarrollo
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Ruta donde se recopilarán los archivos estáticos al ejecutar collectstatic
+# STATICFILES_DIRS = [BASE_DIR / 'static']  # Ruta para los archivos estáticos en desarrollo
+# STATIC_ROOT = BASE_DIR / 'staticfiles'  # Ruta donde se recopilarán los archivos estáticos al ejecutar collectstatic
+
+STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'),
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 SASS_PROCESSOR_ROOT = STATIC_ROOT
 
