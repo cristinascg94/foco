@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votación Foco</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pase.css' %}">
+</head>
+<body>
+
+    <header class="bg-primary text-white text-center py-3">
+        <h1>Bienvenido a FOCO</h1>
+    </header>
+
+    <div class="container">
+        <h1 class="text-center">Pases</h1>
+
+        <div class="card">
+            <div class="pases">
+            <div class="boton-container">
+                
+                <!-- Iteración de pases -->
+                {% for pase in pases %}
+                    <!-- Botón de pase con estilos personalizados -->
+                    <button 
+                        type="button" 
+                        class="boton-pase"
+                        onclick="window.location.href='{% url 'votacion' pase.pase %}'"
+                        {% if not pase.activa %}disabled{% endif %}>
+                        {{ pase.pase }}
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+        </div>
+    </div>
+
+</body>
+</html>

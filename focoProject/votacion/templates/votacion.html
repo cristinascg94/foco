@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votación Foco</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/votacion.css' %}">
+</head>
+<body>
+
+    <header class="bg-primary text-white text-center py-3">
+        <h1>Bienvenido a FOCO</h1>
+    </header>
+
+    <div class="container mt-5">
+        <h1 class="text-center">Vota los cortos</h1>
+
+        <!-- Iterar sobre todos los cortos filtrados -->
+        {% for corto in cortos %}
+        <div class="card p-4 mb-3">
+            <h2 class="text-center">{{ corto.corto }}</h2>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="rating-{{ corto.id }}" class="form-label">Puntuación:</label>
+                    <div class="d-flex flex-column align-items-center">
+                        <input type="range" id="rating-{{ corto.id }}" name="rating" min="1" max="10" value="5" class="slider" required>
+                        <span id="ratingValue-{{ corto.id }}">5</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Votar</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Script para mostrar el valor actual de cada slider -->
+    <script>
+        document.querySelectorAll('.slider').forEach(slider => {
+            const ratingValue = document.getElementById('ratingValue-' + slider.id.split('-')[1]);
+            slider.addEventListener('input', () => {
+                ratingValue.textContent = slider.value;
+            });
+        });
+    </script>
+
+</body>
+</html>
