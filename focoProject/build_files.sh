@@ -1,4 +1,6 @@
 echo "Iniciando el proceso de construcción..."
+echo "Versión de Python instalada:"
+python --version
 
 # Instalar dependencias
 echo "Instalando dependencias..."
