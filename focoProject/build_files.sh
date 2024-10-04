@@ -1,17 +1,9 @@
-echo "Iniciando el proceso de construcción..."
-echo "Versión de Python instalada:"
-python --version
+echo "Building the project..."
+python3.9 -m pip install -r requirements.txt
 
-# Instalar dependencias
-echo "Instalando dependencias..."
-python -m pip install -r requirements.txt
+echo "Make Migration..."
+python3.9 manage.py makemigrations --noinput
+python3.9 manage.py migrate --noinput
 
-# Realizar migraciones
-echo "Aplicando migraciones..."
-python manage.py migrate
-
-# Recoger archivos estáticos
-echo "Recogiendo archivos estáticos..."
-python manage.py collectstatic
-
-echo "Proceso de construcción completado."
+echo "Collect Static..."
+python3.9 manage.py collectstatic --noinput --clear
