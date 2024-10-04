@@ -1,6 +1,15 @@
-# build_files.sh
+echo "Iniciando el proceso de construcción..."
+
+# Instalar dependencias
+echo "Instalando dependencias..."
 pip install -r requirements.txt
 
-# make migrations
-python manage.py migrate 
+# Realizar migraciones
+echo "Aplicando migraciones..."
+python manage.py migrate
+
+# Recoger archivos estáticos
+echo "Recogiendo archivos estáticos..."
 python manage.py collectstatic
+
+echo "Proceso de construcción completado."
