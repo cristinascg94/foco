@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "focoProject/wsgi.py",
+      "src": "manage.py",
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
@@ -17,7 +17,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "focoProject/wsgi.py"
+      "dest": "manage.py"
     }
   ]
 }
