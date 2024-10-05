@@ -132,7 +132,7 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # URL para acceder a los archivos estáticos
-STATIC_URL = '/static/'
+STATIC_URL = 'votacion/static/'
 
 # Directorios adicionales donde buscar archivos estáticos (incluye tu carpeta actual 'static')
 STATICFILES_DIRS = [
