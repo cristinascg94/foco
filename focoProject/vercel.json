@@ -12,10 +12,6 @@
   ],
   "routes": [
     {
-      "src": "/staticfiles/(.*)",
-      "dest": "/staticfiles/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "focoProject/wsgi.py"
     }
