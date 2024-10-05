@@ -15,5 +15,10 @@
       "src": "/(.*)",
       "dest": "focoProject/wsgi.py"
     }
-  ]
+  ],
+  "functions": {
+    "app/api/**/*": {
+      "maxDuration": 59 
+    }
+  }
 }
