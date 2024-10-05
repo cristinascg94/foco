@@ -129,13 +129,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATIC_URL = 'static/'
-# STATICFILES_DIRS = [BASE_DIR / 'static']  # Ruta para los archivos estáticos en desarrollo
-# STATIC_ROOT = BASE_DIR / 'staticfiles'  # Ruta donde se recopilarán los archivos estáticos al ejecutar collectstatic
+# URL para acceder a los archivos estáticos
+STATIC_URL = '/static/'
 
-STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'),
-STATIC_ROOT = os.path.join(BASE_DIR, 'votacion', 'static')
+# Directorios adicionales donde buscar archivos estáticos (incluye tu carpeta actual 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'votacion/static'),
+]
 
 
 # Default primary key field type
