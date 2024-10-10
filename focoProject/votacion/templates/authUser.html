@@ -1,0 +1,76 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votación FOCO</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/authUser.css' %}">
+</head>
+<body>
+
+    <header class="bg-primary text-white text-center py-3">
+        <h1>Bienvenido a FOCO</h1>
+    </header>
+
+    <div class="container">
+        <h1 class="text-center">Autenticación de Usuarios</h1>
+
+        <div class="card">
+            <div class="pases">
+            <div class="boton-container">
+                
+                <form id="userForm">
+                    {% csrf_token %}
+                    <label for="codigo_usuario">Código de Usuario:</label>
+                    <input type="text" id="codigo_usuario" name="codigo_usuario" required>
+                    <button type="submit">Verificar</button>
+                    <div id="result" style="color: red;"></div>
+                </form>
+            
+                <!-- Solo muestra el mensaje de error si existe, es decir, después de la verificación fallida -->
+                
+
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        const nombrePase = '{{ nombre_pase }}';
+        document.getElementById('userForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevenir el envío del formulario
+            const codigo_usuario = document.getElementById('codigo_usuario').value;
+
+            
+
+            const url = `/votacion/check_user/${nombrePase}/`;
+
+            console.log(url)
+
+            fetch(url, { // Asegúrate de que la URL sea correcta
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}' // Agrega el token CSRF
+                },
+                body: new URLSearchParams({ 'codigo_usuario': codigo_usuario })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    // Redirigir a otra ventana
+                    console.log(data); // Cambia esta ruta a la que desees
+                    const url = `/votacion/votacion/${nombrePase}/${codigo_usuario}/`;
+                    window.location.href =url;
+                } else {
+                    const resultDiv = document.getElementById('result');
+                    resultDiv.textContent = 'El usuario no existe.';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
