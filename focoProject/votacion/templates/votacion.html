@@ -21,7 +21,7 @@
         {% for corto in cortos %}
         <div class="card p-4 mb-3">
             <h2 class="text-center">{{ corto.corto }}</h2>
-            <form method="post" action="{% url 'votar' %}">
+            <form method="post" id="votacion">
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="rating-{{ corto.id }}" class="form-label">Puntuación:</label>
@@ -34,6 +34,7 @@
                 <input type="hidden" name="corto_id" value="{{ corto.id }}">
                 <input type="hidden" name="usuario_id" value="{{ usuario }}">
                 <button type="submit" class="btn btn-primary w-100">Votar</button>
+                <div id="result"></div>
             </form>
         </div>
         {% endfor %}
@@ -47,6 +48,48 @@
                 ratingValue.textContent = slider.value;
             });
         });
+
+        document.getElementById('votacion').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevenir el envío del formulario
+
+        // Obtener los valores del slider, corto_id y usuario_id
+        const sliderId = this.querySelector('.slider').id; // El ID del slider actual
+        const corto_id = this.querySelector('input[name="corto_id"]').value; // Obtener el ID del corto
+        const usuario_id = this.querySelector('input[name="usuario_id"]').value; // Obtener el ID del usuario
+        const puntuacion = document.getElementById(sliderId).value; // Obtener el valor del slider actual
+
+        console.log(puntuacion)
+
+        const url = `/votacion/votar/`; // Asegúrate de que la URL sea correcta
+
+        // Enviar la solicitud al backend
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}' // Agrega el token CSRF
+            },
+            body: new URLSearchParams({
+                'corto_id': corto_id,
+                'usuario_id': usuario_id,
+                'puntuacion': puntuacion // Enviar el valor del slider
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            const resultDiv = this.querySelector('#result');
+            if (data.exists) {
+                // Hacer algo si la votación fue exitosa
+                resultDiv.textContent = "Muchas gracias por votar";
+                resultDiv.style.color = 'green';
+            } else {
+                
+                resultDiv.textContent = "Usted ya ha votado este corto";
+                resultDiv.style.color = 'red';
+            }
+        });
+    });
     </script>
 
 </body>
