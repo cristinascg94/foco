@@ -21,15 +21,18 @@
         {% for corto in cortos %}
         <div class="card p-4 mb-3">
             <h2 class="text-center">{{ corto.corto }}</h2>
-            <form method="post" action="">
+            <form method="post" action="{% url 'votar' %}">
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="rating-{{ corto.id }}" class="form-label">Puntuación:</label>
                     <div class="d-flex flex-column align-items-center">
-                        <input type="range" id="rating-{{ corto.id }}" name="rating" min="1" max="10" value="5" class="slider" required>
+                        <input type="range" id="rating-{{ corto.id }}" name="puntuacion" min="1" max="10" value="5" class="slider" required>
                         <span id="ratingValue-{{ corto.id }}">5</span>
                     </div>
                 </div>
+                <!-- Campo oculto para enviar el ID del corto -->
+                <input type="hidden" name="corto_id" value="{{ corto.id }}">
+                <input type="hidden" name="usuario_id" value="{{ usuario }}">
                 <button type="submit" class="btn btn-primary w-100">Votar</button>
             </form>
         </div>

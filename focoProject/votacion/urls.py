@@ -1,10 +1,15 @@
 from django.urls import path
 
-from votacion.views import votacion, index, pase, votacion_cortos
+from votacion.views import votacion, pase, votacion_cortos, authUser,check_user, votar
 
 urlpatterns = [
-    path('', index, name='index'),
-    path('votacion/<str:nombre_pase>/', votacion, name="votacion"),
-    path('pase', pase, name="pase"),
-    path('votacion_corto/<str:nombre_corto>/', votacion_cortos, name="votacion_cortos")
+    path('', pase, name='index'),
+    path('votacion/<str:nombre_pase>/<str:usuario>/', votacion, name="votacion"),
+    path('votacion_corto/<str:nombre_corto>/', votacion_cortos, name="votacion_cortos"),
+    path('usuario/<str:nombre_pase>/', authUser, name="usuario"),
+    path('check_user/<str:nombre_pase>/', check_user, name='check_user'),
+    path('votar/', votar, name='votar'),
+    #path('auth/<str:nombre_pase>/', authUser, name='auth_user'),
+    # path('votacion/<str:nombre_pase>/<str:codigo_usuario>/', votacion, name="votacion"),
+    # path('usuario/<str:nombre_pase>/', authUser_validation, name="authUser_validation")
 ]

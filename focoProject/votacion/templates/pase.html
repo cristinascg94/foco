@@ -27,7 +27,7 @@
                     <button 
                         type="button" 
                         class="boton-pase"
-                        onclick="window.location.href='{% url 'votacion' pase.pase %}'"
+                        onclick="window.location.href='{% url 'usuario' pase.pase %}'"
                         {% if not pase.activa %}disabled{% endif %}>
                         {{ pase.pase }}
                     </button>
