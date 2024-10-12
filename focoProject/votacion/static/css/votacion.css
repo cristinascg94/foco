@@ -19,7 +19,7 @@ header {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 150px;
+    height: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -142,8 +142,8 @@ button:hover {
   display: flex;
   justify-content: center;
   margin-top: 1rem;
-  direction: ltr; /* Asegurar que el orden vaya de izquierda a derecha */
-}
+  direction: rtl;
+} 
 
 .stars input {
   display: none; /* Ocultar los inputs */
