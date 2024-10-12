@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Pase, Corto, Votacion, UsuarioAleatorio
 from django.http import JsonResponse
+from django.db.models import Sum
 
 
 def index(request):
@@ -89,3 +90,24 @@ def votar(request, nombre_pase, usuario):
         return JsonResponse({'message': 'Puntuación actualizada correctamente'})
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
+    
+def get_data_results():
+    results= (Votacion.objects
+            .values('corto_id')
+            .annotate(total_votos=Sum('votacion'))
+                .order_by('-total_votos')[:10])
+    
+    cortos_con_nombres = []
+    for result in results:
+        corto_obj = Corto.objects.get(id=result['corto_id'])
+        cortos_con_nombres.append({
+            'nombre': corto_obj.corto,  # Asegúrate de que el modelo Corto tiene un campo 'nombre'
+            'total_votos': result['total_votos']
+        })
+
+    return cortos_con_nombres
+        
+    
+def graphicsResults(request):
+    corto = get_data_results()
+    return render(request, 'graphicsResults.html', {'corto': corto})

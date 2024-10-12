@@ -1,6 +1,6 @@
 from django.urls import path
 
-from votacion.views import votacion, pase, votacion_cortos, authUser,check_user, votar
+from votacion.views import votacion, pase, votacion_cortos, authUser,check_user, votar, graphicsResults
 
 urlpatterns = [
     path('', pase, name='index'),
@@ -12,4 +12,5 @@ urlpatterns = [
     #path('auth/<str:nombre_pase>/', authUser, name='auth_user'),
     # path('votacion/<str:nombre_pase>/<str:codigo_usuario>/', votacion, name="votacion"),
     # path('usuario/<str:nombre_pase>/', authUser_validation, name="authUser_validation")
+    path('resultados/', graphicsResults, name='graphicsResults'),
 ]
