@@ -19,7 +19,7 @@ header {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 150px;
+    height: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -56,105 +56,25 @@ header h1 {
   margin-bottom: 1rem;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.form-check {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.slider {
-  -webkit-appearance: none;
+table {
   width: 100%;
-  height: 8px;
-  background: #dc493a;
-  border-radius: 5px;
-  outline: none;
-  opacity: 0.7;
-  transition: opacity .2s;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 18px;
+  text-align: left;
 }
 
-.slider:hover {
-  opacity: 1;
+table th, table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
 }
 
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #ffffff;
-  cursor: pointer;
-  border-radius: 50%;
+table th {
+  background-color: #f2f2f2;
 }
 
-.slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background: #ffffff;
-  cursor: pointer;
-  border-radius: 50%;
-}
-
-button {
-  background-color: #dc493a;
-  color: #ffffff;
-  padding: 0.8rem;
-  border: none;
-  border-radius: 5px;
-  width: 100%;
-  margin-top: 1.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-.pases{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.boton-pase {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #dc493a;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  text-align: center;
-  transition: background-color 0.3s ease;
-}
-
-
-/* Botón deshabilitado */
-.boton-pase:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-}
-
-/* Estilo para el contenedor de los botones */
-.boton-container {
-  width: 300px; /* Ajusta el ancho del contenedor si es necesario */
-}
-
-/* Agregar margen entre los botones */
-.boton-container button + button {
-  margin-top: 10px;
-}
-
-/* Cambios de color al pasar sobre botones activos */
-.boton-pase:hover:not(:disabled) {
-  background-color: #0056b3;
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 /* Media queries para pantallas más grandes */
 @media (min-width: 768px) {

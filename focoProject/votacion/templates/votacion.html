@@ -7,34 +7,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Votación Foco</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/votacion.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 </head>
 <body>
 
-    <header class="bg-primary text-white text-center py-3">
-        <h1>Bienvenido a FOCO</h1>
+    <header class="">
+        <h1>Vota los cortos</h1>
     </header>
 
-    <div class="container mt-5">
-        <h1 class="text-center">Vota los cortos</h1>
+    <div class="container">
+        <!-- <h1 class="text-center">Vota los cortos</h1> -->
+
+         <!-- Desplegable para seleccionar un corto -->
+         <div class="dropdown">
+            <label for="cortoSelect">Selecciona un corto:</label>
+            <select id="cortoSelect" onchange="mostrarCard()">
+                <option value="">-- Selecciona un corto --</option>
+                {% for corto in cortos %}
+                    <option value="{{ corto.id }}">{{ corto.corto }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
         <!-- Iterar sobre todos los cortos filtrados -->
         {% for corto in cortos %}
-        <div class="card p-4 mb-3">
-            <h2 class="text-center">{{ corto.corto }}</h2>
-            <form method="post" id="votacion">
+        <div id="cortoCard-{{ corto.id }}" class="card" style="display: none;">
+            <h2>{{ corto.corto }}</h2>
+            <form method="post" action="{% url 'votar' %}">
                 {% csrf_token %}
-                <div class="mb-3">
-                    <label for="rating-{{ corto.id }}" class="form-label">Puntuación:</label>
-                    <div class="d-flex flex-column align-items-center">
-                        <input type="range" id="rating-{{ corto.id }}" name="puntuacion" min="1" max="10" value="5" class="slider" required>
-                        <span id="ratingValue-{{ corto.id }}">5</span>
+                <div class="rating-section">
+                    <label for="rating-{{ corto.id }}">Puntuación:</label>
+                    
+                    <!-- Sistema de votación con estrellas -->
+                    <div class="stars">
+                        <input type="radio" id="star1-{{ corto.id }}" name="puntuacion" value="1" required>
+                        <label for="star1-{{ corto.id }}" title="1 estrella">★</label>
+                        <input type="radio" id="star2-{{ corto.id }}" name="puntuacion" value="2">
+                        <label for="star2-{{ corto.id }}" title="2 estrellas">★</label>
+                        <input type="radio" id="star3-{{ corto.id }}" name="puntuacion" value="3">
+                        <label for="star3-{{ corto.id }}" title="3 estrellas">★</label>
+                        <input type="radio" id="star4-{{ corto.id }}" name="puntuacion" value="4">
+                        <label for="star4-{{ corto.id }}" title="4 estrellas">★</label>
+                        <input type="radio" id="star5-{{ corto.id }}" name="puntuacion" value="5">
+                        <label for="star5-{{ corto.id }}" title="5 estrellas">★</label>
                     </div>
                 </div>
                 <!-- Campo oculto para enviar el ID del corto -->
                 <input type="hidden" name="corto_id" value="{{ corto.id }}">
                 <input type="hidden" name="usuario_id" value="{{ usuario }}">
-                <button type="submit" class="btn btn-primary w-100">Votar</button>
-                <div id="result"></div>
+                <button type="submit" class="btn">Votar</button>
             </form>
         </div>
         {% endfor %}
@@ -91,6 +112,27 @@
         });
     });
     </script>
+
+        <!-- JavaScript para manejar el desplegable y mostrar la tarjeta -->
+<script>
+    function mostrarCard() {
+        var select = document.getElementById('cortoSelect');
+        var selectedCortoId = select.value;
+
+        // Ocultar todas las tarjetas
+        document.querySelectorAll('.card').forEach(function(card) {
+            card.style.display = 'none';
+        });
+
+        // Mostrar la tarjeta del corto seleccionado
+        if (selectedCortoId) {
+            var selectedCard = document.getElementById('cortoCard-' + selectedCortoId);
+            if (selectedCard) {
+                selectedCard.style.display = 'block';
+            }
+        }
+    }
+</script>
 
 </body>
 </html>

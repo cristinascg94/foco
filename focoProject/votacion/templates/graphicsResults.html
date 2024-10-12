@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <header class="bg-primary text-white text-center py-3">
+    <header>
         <h1>Resultados</h1>
     </header>
 
@@ -20,52 +20,26 @@
         {% csrf_token %}
         <div class="card">
             <div class="pases">
-            <div class="boton-container">
-                
-                <canvas id="graficoCortos"></canvas>
-    <script>
-        const ctx = document.getElementById('graficoCortos').getContext('2d');
-        const cortos = {{corto|safe }};
-        
-        // Extraer los nombres de los cortos y los votos
-        const labels = cortos.map(corto => corto.nombre);
-        const datos = cortos.map(corto => corto.total_votos);
-
-        // Crear el gráfico de barras
-        const myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Número de Votos',
-                    data: datos,
-                    backgroundColor: 'rgba(220, 73, 58, 0.7)',
-                    borderColor: 'rgba(220, 73, 58, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Número de Votos'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            // text: 'Cortos'
-                        }
-                    }
-                }
-            }
-        });
-    </script>
+                <div class="boton-container">
+                    <!-- Tabla de Resultados -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Título del Corto</th>
+                                <th>Total de Votos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for corto in cortos %}
+                            <tr>
+                                <td>{{ corto.nombre }}</td>
+                                <td>{{ corto.total_votos }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
         </div>
     </div>
 
