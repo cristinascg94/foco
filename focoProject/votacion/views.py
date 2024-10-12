@@ -108,7 +108,7 @@ def get_data_results():
     results= (Votacion.objects
             .values('corto_id')
             .annotate(total_votos=Sum('votacion'))
-                .order_by('-total_votos')[:10])
+                .order_by('-total_votos')[:5])
     
     cortos_con_nombres = []
     for result in results:

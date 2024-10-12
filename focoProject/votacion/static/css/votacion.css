@@ -118,6 +118,53 @@ button:hover {
   background-color: #dc493a;
 }
 
+/* Estilo del desplegable */
+#cortoSelect {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  background-color: #2a2a2a; /* Fondo oscuro */
+  color: #ffffff; /* Texto en blanco */
+  border: 2px solid #dc493a; /* Borde rojo oscuro */
+  border-radius: 8px; /* Bordes redondeados */
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+#cortoSelect:focus {
+  border-color: #ffffff; /* Borde blanco al seleccionar */
+  background-color: #1e1e1e; /* Fondo aún más oscuro en foco */
+  outline: none;
+}
+
+/* Estilo de las estrellas */
+.stars {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  direction: rtl;
+} 
+
+.stars input {
+  display: none; /* Ocultar los inputs */
+}
+
+.stars label {
+  font-size: 2.2rem;
+  color: #777;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.stars input:checked ~ label {
+  color: #dc493a; /* Color rojo oscuro cuando están seleccionadas */
+}
+
+/* Efecto hover que ahora comienza desde la izquierda (primera estrella) */
+.stars label:hover,
+.stars label:hover ~ label {
+  color: #ffcc00; /* Cambia el color de las estrellas al pasar el cursor */
+}
 /* Media queries para pantallas más grandes */
 @media (min-width: 768px) {
   body {
