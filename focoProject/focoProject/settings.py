@@ -83,7 +83,10 @@ WSGI_APPLICATION = 'focoProject.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://festivalfoco.halarit.org',  # Agrega tu dominio aquí
+    # Puedes agregar otros dominios si es necesario
+]
 
 
 DATABASES = {
