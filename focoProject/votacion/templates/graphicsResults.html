@@ -7,16 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Votación Foco</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/pase.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/graphicsResults.css' %}">
 </head>
 <body>
 
     <header class="bg-primary text-white text-center py-3">
-        <h1>Bienvenido a FOCO</h1>
+        <h1>Resultados</h1>
     </header>
 
     <div class="container">
-        <h1 class="text-center">Pases</h1>
+        <h1 class="text-center">Cortos ganadores</h1>
 
         <div class="card">
             <div class="pases">
@@ -39,8 +39,8 @@
                 datasets: [{
                     label: 'Número de Votos',
                     data: datos,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(220, 73, 58, 0.7)',
+                    borderColor: 'rgba(220, 73, 58, 1)',
                     borderWidth: 1
                 }]
             },
@@ -57,7 +57,7 @@
                     x: {
                         title: {
                             display: true,
-                            text: 'Cortos'
+                            // text: 'Cortos'
                         }
                     }
                 }
