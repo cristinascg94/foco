@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votación Foco</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pase.css' %}">
+</head>
+<body>
+
+    <header class="bg-primary text-white text-center py-3">
+        <h1>Bienvenido a FOCO</h1>
+    </header>
+
+    <div class="container">
+        <h1 class="text-center">Pases</h1>
+
+        <div class="card">
+            <div class="pases">
+            <div class="boton-container">
+                
+                <!-- Iteración de pases -->
+                <form method="POST">
+                    {% csrf_token %}
+                    <label for="username">Usuario:</label>
+                    <input type="text" name="username" required>
+                    <label for="password">Contraseña:</label>
+                    <input type="password" name="password" required>
+                    <button type="submit">Iniciar sesión</button>
+                    {% if error %}
+                        <p style="color: red;">{{ error }}</p>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+
+</body>
+</html>

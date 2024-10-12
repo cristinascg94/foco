@@ -8,6 +8,10 @@ from docx.shared import Pt
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 import csv
+from django.db.models import Sum
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
+from django.middleware.csrf import get_token
 
 
 
@@ -100,6 +104,28 @@ def votar(request):
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
     
+def get_data_results():
+    results= (Votacion.objects
+            .values('corto_id')
+            .annotate(total_votos=Sum('votacion'))
+                .order_by('-total_votos')[:10])
+    
+    cortos_con_nombres = []
+    for result in results:
+        corto_obj = Corto.objects.get(id=result['corto_id'])
+        cortos_con_nombres.append({
+            'nombre': corto_obj.corto,  # Asegúrate de que el modelo Corto tiene un campo 'nombre'
+            'total_votos': result['total_votos']
+        })
+
+    return cortos_con_nombres
+
+
+@login_required
+def graphicsResults(request):
+    corto = get_data_results()
+    return render(request, 'graphicsResults.html', {'corto': corto})
+    
 
 
 
@@ -123,3 +149,22 @@ def descargar_csv(request):
         writer.writerow(calificacion)
 
     return response
+
+
+def login_view(request):
+    get_token(request)
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirigir a la vista adecuada según el tipo de usuario
+            if user.is_staff:  # Redirigir a panel de administración si es admin
+                return redirect('/admin/')
+            else:
+                next_url = request.GET.get('next')  # Si se solicitó otra URL
+                return redirect(next_url if next_url else 'mi_vista_protegida')  # Redirigir a una vista protegida
+        else:
+            return render(request, 'login.html', {'error': 'Credenciales inválidas'})
+    return render(request, 'login.html')
