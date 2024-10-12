@@ -24,27 +24,66 @@ def pase(request):
     return render(request, 'pase.html', {'pases': pases})
 
 
+# def votacion(request, nombre_pase, usuario):
+#     print("Entro")
+
+        
+#     print(usuario)
+        
+#         # Asegúrate de que el código de usuario es válido
+#     if usuario:
+#         # Obtener el objeto Pase
+#         pase = Pase.objects.get(pase=nombre_pase)
+        
+#         # Filtrar los cortos por el pase seleccionado
+#         cortos_filtrados = Corto.objects.filter(pase=pase)
+        
+#         # Renderizar la plantilla con los cortos filtrados
+#         return render(request, 'votacion.html', {'cortos': cortos_filtrados,
+#                                                  'usuario':usuario})
+    
+#     # Si no se recibe un POST válido, podrías redirigir o mostrar un mensaje de error
+#     return render(request, 'votacion.html', {'error_message': "No se recibió un código de usuario válido."})
+
+
+
+
 def votacion(request, nombre_pase, usuario):
     print("Entro")
 
-        
     print(usuario)
-        
-        # Asegúrate de que el código de usuario es válido
+
+    # Asegúrate de que el código de usuario es válido
     if usuario:
         # Obtener el objeto Pase
         pase = Pase.objects.get(pase=nombre_pase)
-        
+
         # Filtrar los cortos por el pase seleccionado
         cortos_filtrados = Corto.objects.filter(pase=pase)
-        
-        # Renderizar la plantilla con los cortos filtrados
-        return render(request, 'votacion.html', {'cortos': cortos_filtrados,
-                                                 'usuario':usuario})
-    
+
+        # Obtener las votaciones del usuario para saber si ha editado
+        votaciones_usuario = Votacion.objects.filter(usuario__nombre_usuario=usuario)
+
+        # Crear un diccionario para fácil acceso a la edición
+        votaciones_dict = {votacion.corto.id: votacion for votacion in votaciones_usuario}
+
+        # Crear una lista de cortos con información de edición
+        cortos = []
+        for corto in cortos_filtrados:
+            editado = corto.id in votaciones_dict  # Verifica si ha sido editado
+            cortos.append({
+                'id': corto.id,
+                'corto': corto.corto,
+                'editado': votaciones_dict.get(corto.id).edicion if editado else 0
+            })
+
+        print(cortos)
+
+        # Renderizar la plantilla con los cortos filtrados y su información de edición
+        return render(request, 'votacion.html', {'cortos': cortos, 'usuario': usuario})
+
     # Si no se recibe un POST válido, podrías redirigir o mostrar un mensaje de error
     return render(request, 'votacion.html', {'error_message': "No se recibió un código de usuario válido."})
-
 def votacion_cortos(request, nombre_corto, usuario):
     cortos_filtrados = Corto.objects.get(corto=nombre_corto)
     votacion_filtrada = Votacion.objects.filter(corto=cortos_filtrados)
@@ -83,7 +122,7 @@ def votar(request):
         # Obtener datos del POST
         puntuacion = request.POST.get('puntuacion')
         corto_id = request.POST.get('corto_id')
-        print(corto_id)
+        print(puntuacion)
         usuario = request.POST.get('usuario_id')
 
         if not usuario or not corto_id:
@@ -100,7 +139,7 @@ def votar(request):
             votacion.save()
             return JsonResponse({'exists': True}, status=200)
         else:
-            return JsonResponse({'message': 'Usted ya ha votado'}, status=200)
+            return JsonResponse({'exists': False}, status=200)
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
     
@@ -110,6 +149,8 @@ def get_data_results():
             .annotate(total_votos=Sum('votacion'))
                 .order_by('-total_votos')[:5])
     
+    print(results)
+    
     cortos_con_nombres = []
     for result in results:
         corto_obj = Corto.objects.get(id=result['corto_id'])
@@ -118,13 +159,14 @@ def get_data_results():
             'total_votos': result['total_votos']
         })
 
+    print(cortos_con_nombres)
     return cortos_con_nombres
 
 
 @login_required
 def graphicsResults(request):
     corto = get_data_results()
-    return render(request, 'graphicsResults.html', {'corto': corto})
+    return render(request, 'graphicsResults.html', {'cortos': corto})
     
 
 
@@ -160,11 +202,13 @@ def login_view(request):
         if user is not None:
             login(request, user)
             # Redirigir a la vista adecuada según el tipo de usuario
-            if user.is_staff:  # Redirigir a panel de administración si es admin
-                return redirect('/admin/')
-            else:
+            try:  # Redirigir a panel de administración si es admin
                 next_url = request.GET.get('next')  # Si se solicitó otra URL
-                return redirect(next_url if next_url else 'mi_vista_protegida')  # Redirigir a una vista protegida
+                return redirect(next_url) 
+                
+            except:
+                return redirect('/admin/')
+                 # Redirigir a una vista protegida
         else:
             return render(request, 'login.html', {'error': 'Credenciales inválidas'})
     return render(request, 'login.html')

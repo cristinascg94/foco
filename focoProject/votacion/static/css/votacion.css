@@ -165,6 +165,15 @@ button:hover {
 .stars label:hover ~ label {
   color: #ffcc00; /* Cambia el color de las estrellas al pasar el cursor */
 }
+
+.result {
+  display: flex; /* Utiliza flexbox para alinear */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente si hay espacio adicional */
+  margin: 10px 0; /* Espacio arriba y abajo del resultado */
+  font-weight: bold; /* Estilo para resaltar el texto */
+  color: black; /* Color de texto predeterminado */
+}
 /* Media queries para pantallas más grandes */
 @media (min-width: 768px) {
   body {

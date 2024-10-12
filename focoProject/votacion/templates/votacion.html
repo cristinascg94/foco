@@ -11,15 +11,14 @@
 </head>
 <body>
 
-    <header class="">
+    <header>
         <h1>Vota los cortos</h1>
     </header>
 
     <div class="container">
-        <!-- <h1 class="text-center">Vota los cortos</h1> -->
 
-         <!-- Desplegable para seleccionar un corto -->
-         <div class="dropdown">
+        <!-- Desplegable para seleccionar un corto -->
+        <div class="dropdown">
             <label for="cortoSelect">Selecciona un corto:</label>
             <select id="cortoSelect" onchange="mostrarCard()">
                 <option value="">-- Selecciona un corto --</option>
@@ -33,106 +32,128 @@
         {% for corto in cortos %}
         <div id="cortoCard-{{ corto.id }}" class="card" style="display: none;">
             <h2>{{ corto.corto }}</h2>
-            <form method="post" action="{% url 'votar' %}">
-                {% csrf_token %}
-                <div class="rating-section">
-                    <label for="rating-{{ corto.id }}">Puntuación:</label>
-                    
-                    <!-- Sistema de votación con estrellas -->
-                    <div class="stars">
-                        <input type="radio" id="star1-{{ corto.id }}" name="puntuacion" value="1" required>
-                        <label for="star1-{{ corto.id }}" title="1 estrella">★</label>
-                        <input type="radio" id="star2-{{ corto.id }}" name="puntuacion" value="2">
-                        <label for="star2-{{ corto.id }}" title="2 estrellas">★</label>
-                        <input type="radio" id="star3-{{ corto.id }}" name="puntuacion" value="3">
-                        <label for="star3-{{ corto.id }}" title="3 estrellas">★</label>
-                        <input type="radio" id="star4-{{ corto.id }}" name="puntuacion" value="4">
-                        <label for="star4-{{ corto.id }}" title="4 estrellas">★</label>
-                        <input type="radio" id="star5-{{ corto.id }}" name="puntuacion" value="5">
-                        <label for="star5-{{ corto.id }}" title="5 estrellas">★</label>
-                    </div>
+            
+            <!-- Mensaje de resultado (fuera del formulario para mantenerse visible) -->
+            <div class="result" id="result-{{ corto.id }}"></div>
+
+            {% if corto.editado > 0 %}
+                <div class="result" style="color: white; font-weight: bold;">
+                    Usted ya ha votado este corto.
                 </div>
-                <!-- Campo oculto para enviar el ID del corto -->
-                <input type="hidden" name="corto_id" value="{{ corto.id }}">
-                <input type="hidden" name="usuario_id" value="{{ usuario }}">
-                <button type="submit" class="btn">Votar</button>
-            </form>
+            {% else %}
+                <!-- Formulario de votación -->
+                <form method="post" class="votacionForm" id="votacionForm-{{ corto.id }}">
+                    {% csrf_token %}
+                    <div class="rating-section">
+                        <label for="rating-{{ corto.id }}">Puntuación:</label>
+                        
+                        <!-- Sistema de votación con estrellas -->
+                        <div class="stars">
+                            <input type="radio" id="star5-{{ corto.id }}" name="puntuacion" value="5">
+                            <label for="star5-{{ corto.id }}" title="5 estrellas">★</label>
+                            <input type="radio" id="star4-{{ corto.id }}" name="puntuacion" value="4">
+                            <label for="star4-{{ corto.id }}" title="4 estrellas">★</label>
+                            <input type="radio" id="star3-{{ corto.id }}" name="puntuacion" value="3">
+                            <label for="star3-{{ corto.id }}" title="3 estrellas">★</label>
+                            <input type="radio" id="star2-{{ corto.id }}" name="puntuacion" value="2">
+                            <label for="star2-{{ corto.id }}" title="2 estrellas">★</label>
+                            <input type="radio" id="star1-{{ corto.id }}" name="puntuacion" value="1">
+                            <label for="star1-{{ corto.id }}" title="1 estrella">★</label>
+                        </div>
+                    </div>
+
+                    <!-- Campo oculto para enviar el ID del corto -->
+                    <input type="hidden" name="corto_id" value="{{ corto.id }}">
+                    <input type="hidden" name="usuario_id" value="{{ usuario }}">
+                    <button type="submit" class="btn">Votar</button>
+                </form>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
 
-    <!-- Script para mostrar el valor actual de cada slider -->
+    <!-- Script para manejar la votación dinámica -->
     <script>
-        document.querySelectorAll('.slider').forEach(slider => {
-            const ratingValue = document.getElementById('ratingValue-' + slider.id.split('-')[1]);
-            slider.addEventListener('input', () => {
-                ratingValue.textContent = slider.value;
+        function mostrarCard() {
+            var select = document.getElementById('cortoSelect');
+            var selectedCortoId = select.value;
+
+            // Ocultar todas las tarjetas
+            document.querySelectorAll('.card').forEach(function(card) {
+                card.style.display = 'none';
             });
-        });
 
-        document.getElementById('votacion').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío del formulario
-
-        // Obtener los valores del slider, corto_id y usuario_id
-        const sliderId = this.querySelector('.slider').id; // El ID del slider actual
-        const corto_id = this.querySelector('input[name="corto_id"]').value; // Obtener el ID del corto
-        const usuario_id = this.querySelector('input[name="usuario_id"]').value; // Obtener el ID del usuario
-        const puntuacion = document.getElementById(sliderId).value; // Obtener el valor del slider actual
-
-        console.log(puntuacion)
-
-        const url = `/votacion/votar/`; // Asegúrate de que la URL sea correcta
-
-        // Enviar la solicitud al backend
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': '{{ csrf_token }}' // Agrega el token CSRF
-            },
-            body: new URLSearchParams({
-                'corto_id': corto_id,
-                'usuario_id': usuario_id,
-                'puntuacion': puntuacion // Enviar el valor del slider
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-            const resultDiv = this.querySelector('#result');
-            if (data.exists) {
-                // Hacer algo si la votación fue exitosa
-                resultDiv.textContent = "Muchas gracias por votar";
-                resultDiv.style.color = 'green';
-            } else {
-                
-                resultDiv.textContent = "Usted ya ha votado este corto";
-                resultDiv.style.color = 'red';
-            }
-        });
-    });
-    </script>
-
-        <!-- JavaScript para manejar el desplegable y mostrar la tarjeta -->
-<script>
-    function mostrarCard() {
-        var select = document.getElementById('cortoSelect');
-        var selectedCortoId = select.value;
-
-        // Ocultar todas las tarjetas
-        document.querySelectorAll('.card').forEach(function(card) {
-            card.style.display = 'none';
-        });
-
-        // Mostrar la tarjeta del corto seleccionado
-        if (selectedCortoId) {
-            var selectedCard = document.getElementById('cortoCard-' + selectedCortoId);
-            if (selectedCard) {
-                selectedCard.style.display = 'block';
+            // Mostrar la tarjeta del corto seleccionado
+            if (selectedCortoId) {
+                var selectedCard = document.getElementById('cortoCard-' + selectedCortoId);
+                if (selectedCard) {
+                    selectedCard.style.display = 'block';
+                }
             }
         }
-    }
-</script>
+
+        // Asignar evento de submit a todos los formularios
+        document.querySelectorAll('.votacionForm').forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevenir el envío del formulario
+
+                // Obtener los valores del corto_id y usuario_id
+                const corto_id = this.querySelector('input[name="corto_id"]').value;
+                const usuario_id = this.querySelector('input[name="usuario_id"]').value;
+
+                // Comprobar si el usuario ha seleccionado una puntuación
+                const puntuacionElement = this.querySelector('input[name="puntuacion"]:checked');
+                const resultDiv = document.getElementById('result-' + corto_id);
+
+                // Si no hay puntuación seleccionada, mostrar un mensaje de error y detener el envío
+                if (!puntuacionElement) {
+                    resultDiv.textContent = "Usted no ha votado ninguna estrella";
+                    resultDiv.style.color = 'red';
+                    return; // Detener la ejecución si no se ha seleccionado una puntuación
+                }
+
+                const puntuacion = puntuacionElement.value; // Obtener la puntuación seleccionada
+                const url = `/votacion/votar/`; // Asegúrate de que la URL sea correcta
+
+                // Obtener el token CSRF desde el input hidden
+                const csrfToken = this.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+                // Crear los datos que se van a enviar en el formulario
+                const data = new URLSearchParams({
+                    'corto_id': corto_id,
+                    'usuario_id': usuario_id,
+                    'puntuacion': puntuacion
+                });
+
+                // Enviar la solicitud al backend
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: data.toString()
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        resultDiv.textContent = "Muchas gracias por votar";
+                        resultDiv.style.color = 'white';
+
+                        // Ocultar el formulario después de votar correctamente
+                        this.style.display = 'none';
+                    } else {
+                        resultDiv.textContent = "Usted ya ha votado este corto";
+                        resultDiv.style.color = 'white';
+                        this.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la votación:', error);
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>

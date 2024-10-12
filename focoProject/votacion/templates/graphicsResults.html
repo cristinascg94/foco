@@ -22,7 +22,7 @@
             <div class="pases">
                 <div class="boton-container">
                     <!-- Tabla de Resultados -->
-                    <table class="table">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Título del Corto</th>
@@ -30,12 +30,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for corto in cortos %}
-                            <tr>
-                                <td>{{ corto.nombre }}</td>
-                                <td>{{ corto.total_votos }}</td>
-                            </tr>
-                            {% endfor %}
+                            {% if cortos %}
+                                {% for corto in cortos %}
+                                <tr>
+                                    <td>{{ corto.nombre }}</td>
+                                    <td>{{ corto.total_votos }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="2">No hay cortos disponibles.</td>
+                                </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>
