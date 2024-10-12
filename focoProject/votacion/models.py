@@ -65,6 +65,8 @@ class Votacion(models.Model):
     corto = models.ForeignKey('Corto', on_delete=models.CASCADE, related_name='votaciones')
     usuario = models.ForeignKey('UsuarioAleatorio', on_delete=models.CASCADE, related_name='votaciones')
     votacion = models.IntegerField(default=0)
+    edicion = models.IntegerField(default=0)
+
 
     def __str__(self):
         return f"Votación de {self.usuario.nombre_usuario} para {self.corto.corto}: {self.votacion}"
