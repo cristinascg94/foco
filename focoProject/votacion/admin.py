@@ -6,7 +6,39 @@ from docx.shared import Pt
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from django.http import HttpResponse
+import qrcode
+from io import BytesIO
+from docx.shared import Inches
+from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 
+def crear_codigo_qr(url):
+    """
+    Crea un código QR para una URL y devuelve la imagen como un objeto BytesIO.
+
+    :param url: La URL que se va a codificar en el código QR.
+    :return: Un objeto BytesIO que contiene la imagen del código QR.
+    """
+    # Crear el objeto QR
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+
+    # Agregar la URL al código QR
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    # Crear la imagen del código QR
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    # Guardar la imagen en un objeto BytesIO
+    img_bytes = BytesIO()
+    img.save(img_bytes, format='PNG')
+    img_bytes.seek(0)  # Mover el puntero al inicio del objeto BytesIO
+
+    return img_bytes
 
 
 def set_cell_border(cell, **kwargs):
@@ -34,25 +66,48 @@ def generar_word(modeladmin, request, queryset):
 
         # Crear el documento Word
         doc = Document()
-        doc.add_heading(f'Usuarios con Pase: {pase}', 0)
+
+        sections = doc.sections
+        for section in sections:
+            section.top_margin = Inches(0)    # Márgenes superior
+            section.bottom_margin = Inches(0) # Márgenes inferior
+            section.left_margin = Inches(0)   # Márgenes izquierdo
+            section.right_margin = Inches(0)  # Márgenes derecho
+
 
         # Agregar tabla con dos columnas
-        table = doc.add_table(rows=1, cols=2)
-        hdr_cells = table.rows[0].cells
-        hdr_cells[0].text = 'Nombre'
-        hdr_cells[1].text = 'Pase'
+        table = doc.add_table(rows=1, cols=4)
 
-        # Aplicar bordes a la fila de encabezado
-        for cell in hdr_cells:
-            set_cell_border(cell)
+        n=0
+        qr_url = f"http://13.60.206.34/votacion/" 
+        qr_image = crear_codigo_qr(qr_url)
 
-        # Rellenar la tabla con los usuarios filtrados y aplicar bordes
+        usuarios_escribir = []
         for usuario in usuarios_filtrados:
-            row_cells = table.add_row().cells
-            row_cells[0].text = f"{usuario} {pase}"
-            # Aplicar bordes a cada celda
-            for cell in row_cells:
-                set_cell_border(cell)
+
+            usuarios_escribir.append(usuario)
+            
+            if len(usuarios_escribir)==4:
+                row_cells = table.add_row().cells
+                for n_user, user in enumerate(usuarios_escribir):
+                    row_cells[n_user].text = f"\n\nPase: {pase}\nUsuario: {user}"
+                    run = row_cells[n_user].add_paragraph().add_run()  # Crear un nuevo párrafo en la celda
+                    run.add_picture(qr_image, width=Inches(1.0))
+                    for paragraph in row_cells[n_user].paragraphs:
+                        paragraph.alignment = 1  # 1 es para centrar
+
+                usuarios_escribir = []
+
+                # Aplicar bordes a cada celda
+                for cell in row_cells:
+                    set_cell_border(cell)
+            n_hoja =n+1
+            if n_hoja%16 == 0:
+                print(f"entro {n_hoja}")
+                doc.add_page_break()
+                table = doc.add_table(rows=1, cols=4)
+            print(n)
+            n=n+1
 
         # Preparar la respuesta HTTP
         f = io.BytesIO()

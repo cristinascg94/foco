@@ -31,7 +31,7 @@ DEBUG = True
 
 # ALLOWED_HOSTS = ['.vercel.app', '.now.sh']
 # Or * to allow all
-ALLOWED_HOSTS = ["13.60.206.34"]
+ALLOWED_HOSTS = ["13.60.206.34", "*"]
 
 
 
