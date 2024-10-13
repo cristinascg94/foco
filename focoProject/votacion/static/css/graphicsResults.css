@@ -57,63 +57,27 @@ header h1 {
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-  font-size: 18px;
-  text-align: left;
+  width: 100%; /* Ajusta el ancho de la tabla al 100% del contenedor */
+  border-collapse: collapse; /* Colapsa los bordes de la tabla */
+  border: 2px solid white;
 }
 
-table th, table td {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
+th {
+  background-color: red; /* Color de fondo para los encabezados */
+  color: white; /* Color del texto para los encabezados */
+  padding: 10px; /* Espaciado interno para las celdas de encabezado */
+  text-align: center; /* Alineación del texto a la izquierda */
+  border: 1px solid white;
 }
 
-table th {
-  background-color: #f2f2f2;
+td {
+  background-color: black; /* Color de fondo para las celdas de contenido */
+  color: white; /* Color del texto para las celdas de contenido */
+  padding: 10px; /* Espaciado interno para las celdas de contenido */
+  border: 1px solid white;
 }
-
-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-.boton-volver {
-  position: absolute; /* Posiciona el botón en relación a su contenedor */
-  top: 10px; /* Ajusta la posición vertical */
-  right: 20px;
-  background-color: #dc493a;
-  color: white;
-  padding: 10px 20px;
-  text-decoration: none;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.boton-volver:hover {
-  background-color: #dc493a;
-}
-
-.footer {
-  background-color: #333; /* Color de fondo del footer */
-  color: white; /* Color del texto del footer */
-  text-align: center; /* Centra el texto */
-  padding: 10px 0; /* Espaciado vertical en el footer */
-  display: flex; /* Utiliza flexbox para alinear los iconos */
-  justify-content: center; /* Centra los iconos en el footer */
-  gap: 20px; /* Espaciado entre los iconos */
-  position: absolute; /* Asegura que el footer se mantenga en la parte inferior */
-  bottom: 0; /* Coloca el footer en la parte inferior */
-  left: 0; /* Alinea a la izquierda */
-  right: 0; /* Alinea a la derecha */
-}
-
-.icono-web, .icono-instagram {
-  color: white; /* Color del texto e íconos */
-  text-decoration: none; /* Sin subrayado */
-  font-size: 24px; /* Tamaño de los iconos */
-}
-
-.icono-web:hover, .icono-instagram:hover {
-  color: #dc493a; /* Color de hover para los iconos */
+td:nth-child(2) {
+  text-align: center; /* Centra el texto en la segunda columna */
 }
 /* Media queries para pantallas más grandes */
 @media (min-width: 768px) {
