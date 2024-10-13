@@ -8,7 +8,7 @@ urlpatterns = [
     path('usuario/<str:nombre_pase>/', authUser, name="usuario"),
     path('check_user/<str:nombre_pase>/', check_user, name='check_user'),
     path('votar/', votar, name='votar'),
-    path('descargar-calificaciones-csv/', descargar_csv, name='descargar_calificaciones_csv'),
+    path('descargar-calificaciones-csv/<str:nombre_pase>/', descargar_csv, name='descargar_calificaciones_csv'),
     path('resultados/', graphicsResults, name='graphicsResults'),
 
 ]

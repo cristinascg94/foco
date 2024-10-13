@@ -12,7 +12,7 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.middleware.csrf import get_token
-
+import random
 
 
 def index(request):
@@ -114,7 +114,7 @@ def votar(request):
         # Obtener datos del POST
         puntuacion = request.POST.get('puntuacion')
         corto_id = request.POST.get('corto_id')
-        print(puntuacion)
+
         usuario = request.POST.get('usuario_id')
 
         if not usuario or not corto_id:
@@ -124,7 +124,6 @@ def votar(request):
 
         # Filtrar el objeto por usuario_id y corto_id
         votacion = get_object_or_404(Votacion, usuario_id=usuario, corto_id=corto_id)
-
         if votacion.edicion<1:
             votacion.edicion = 1
             votacion.votacion = puntuacion
@@ -164,7 +163,7 @@ def graphicsResults(request):
 
 
 
-def descargar_csv(request):
+def descargar_csv(request, nombre_pase=None):
     # Crear la respuesta HTTP con el tipo de contenido adecuado
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="calificaciones.csv"'
@@ -173,17 +172,23 @@ def descargar_csv(request):
     writer = csv.writer(response)
 
     # Escribir el encabezado del CSV
-    writer.writerow(['corto', 'usuario', 'votacion'])
+    writer.writerow(['corto_id', 'usuario_id', 'puntuacion'])
 
-    # Consultar los datos del modelo Calificacion
-    calificaciones = Votacion.objects.all().values_list('corto', 'usuario', 'votacion')
+    # Consultar los datos del modelo Votacion, filtrando por nombre del pase si se proporciona
+    if nombre_pase:
+        # Filtrar las votaciones por el nombre del pase
+        calificaciones = Votacion.objects.filter(corto__pase__pase=nombre_pase).values_list('corto', 'usuario')
+    else:
+        calificaciones = Votacion.objects.all().values_list('corto', 'usuario')
 
     # Escribir los datos en el archivo CSV
-    for calificacion in calificaciones:
-        writer.writerow(calificacion)
+    for corto, usuario in calificaciones:
+        # Generar un número aleatorio entre 0 y 5
+        votacion_random = random.randint(0, 5)
+        # Escribir la fila en el CSV
+        writer.writerow([corto, usuario, votacion_random])
 
     return response
-
 
 def login_view(request):
     get_token(request)

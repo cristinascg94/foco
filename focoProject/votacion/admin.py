@@ -79,7 +79,7 @@ def generar_word(modeladmin, request, queryset):
         table = doc.add_table(rows=1, cols=4)
 
         n=0
-        qr_url = f"http://13.60.206.34/votacion/" 
+        qr_url = f"https://festivalfoco.halarit.org" 
         qr_image = crear_codigo_qr(qr_url)
 
         usuarios_escribir = []
@@ -139,5 +139,5 @@ admin.site.register(Pase, PaseAdmin)
 
 class VotacionAdmin(admin.ModelAdmin):
     # Muestra las columnas 'corto', 'usuario' y 'votacion' en la lista del admin
-    list_display = ('corto', 'usuario', 'votacion')
+    list_display = ('corto', 'usuario', 'votacion','edicion')
 admin.site.register(Votacion, VotacionAdmin)
