@@ -20,7 +20,7 @@ def index(request):
 
 
 def pase(request):
-    pases = Pase.objects.all()
+    pases = Pase.objects.all().order_by('orden')
     return render(request, 'pase.html', {'pases': pases})
 
 
@@ -84,14 +84,6 @@ def votacion(request, nombre_pase, usuario):
 
     # Si no se recibe un POST válido, podrías redirigir o mostrar un mensaje de error
     return render(request, 'votacion.html', {'error_message': "No se recibió un código de usuario válido."})
-def votacion_cortos(request, nombre_corto, usuario):
-    cortos_filtrados = Corto.objects.get(corto=nombre_corto)
-    votacion_filtrada = Votacion.objects.filter(corto=cortos_filtrados)
-
-    print(votacion_filtrada)
-
-    return render(request, 'votacion.html', {'cortos': votacion_filtrada
-                                             })
 
 
 

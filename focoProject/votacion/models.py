@@ -1,6 +1,9 @@
 from django.db import models
 import random
 import string
+import random
+import string
+
 
 class UsuarioAleatorio(models.Model):
     nombre_usuario = models.CharField(max_length=10, unique=True)
@@ -13,9 +16,8 @@ class UsuarioAleatorio(models.Model):
     def generar_usuario_aleatorio():
         """Genera un nombre de usuario aleatorio que es único en la base de datos"""
         while True:
-            prefix = ''.join(random.choices(string.ascii_lowercase, k=2))
-            suffix = ''.join(random.choices(string.digits, k=3))
-            nuevo_usuario = f'{prefix}{suffix}'
+            caracteres = string.ascii_letters + string.digits
+            nuevo_usuario = ''.join(random.choices(caracteres, k=6)).capitalize()
             if not UsuarioAleatorio.objects.filter(nombre_usuario=nuevo_usuario).exists():
                 return nuevo_usuario
 
@@ -23,17 +25,20 @@ class UsuarioAleatorio(models.Model):
 class Pase(models.Model):
     pase = models.CharField(max_length=255)
     activa = models.BooleanField(default=True)
+    orden = models.IntegerField(unique=True, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         super(Pase, self).save(*args, **kwargs)
         
         # Generar 300 usuarios únicos si no existen ya para este pase
         if not self.usuarios.exists():
-            for _ in range(300):
-                UsuarioAleatorio.objects.create(
+            usuarios_nuevos = [
+                UsuarioAleatorio(
                     nombre_usuario=UsuarioAleatorio.generar_usuario_aleatorio(),
                     pase=self
-                )
+                ) for _ in range(300)
+            ]
+            UsuarioAleatorio.objects.bulk_create(usuarios_nuevos)
 
     def __str__(self):
         return self.pase
@@ -49,13 +54,20 @@ class Corto(models.Model):
         # Obtener los usuarios asociados con este pase
         usuarios = self.pase.usuarios.all()
         
+        # Crear una lista para almacenar las instancias de Votacion
+        votaciones = []
+        
         # Vincular cada usuario al corto a través del modelo Votacion
         for usuario in usuarios:
-            Votacion.objects.create(
+            votaciones.append(Votacion(
                 corto=self,
                 usuario=usuario,
                 votacion=0  # Valor inicial de la votación
-            )
+            ))
+        
+        # Crear todas las instancias de Votacion de una vez
+        if votaciones:
+            Votacion.objects.bulk_create(votaciones)
 
     def __str__(self):
         return self.corto
