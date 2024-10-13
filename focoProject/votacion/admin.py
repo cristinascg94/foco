@@ -122,7 +122,11 @@ def generar_word(modeladmin, request, queryset):
 generar_word.short_description = "generar_word"
 
 
-admin.site.register(Corto)
+@admin.register(Corto)
+class CortoAdmin(admin.ModelAdmin):
+    list_display = ('corto', 'pase')  # Mostrar los campos corto y pase en la lista
+    list_filter = ('pase',)  # Permitir filtrar por pase
+    search_fields = ('corto',)  # Habilitar búsqueda por el nombre del corto
 
 admin.site.register(UsuarioAleatorio)
 
