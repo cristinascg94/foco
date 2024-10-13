@@ -63,7 +63,7 @@ table {
 }
 
 th {
-  background-color: red; /* Color de fondo para los encabezados */
+  background-color: #dc493a; /* Color de fondo para los encabezados */
   color: white; /* Color del texto para los encabezados */
   padding: 10px; /* Espaciado interno para las celdas de encabezado */
   text-align: center; /* Alineación del texto a la izquierda */
