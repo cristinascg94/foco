@@ -10,10 +10,15 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 </head>
 <body>
+    
 
     <header>
         <h1>Vota los cortos</h1>
+        <a href="/" class="boton-volver">
+            <i class="fas fa-home"></i>
+        </a>
     </header>
+    
 
     <div class="container">
 
@@ -45,7 +50,7 @@
                 <form method="post" class="votacionForm" id="votacionForm-{{ corto.id }}">
                     {% csrf_token %}
                     <div class="rating-section">
-                        <label for="rating-{{ corto.id }}">Puntuación:</label>
+                        <label for="rating-{{ corto.id }}" class="result" style="color: white; font-weight: bold;">Puntúa este corto</label>
                         
                         <!-- Sistema de votación con estrellas -->
                         <div class="stars">
@@ -72,6 +77,14 @@
         {% endfor %}
     </div>
 
+    <footer class="footer">
+        <a href="https://festivalfoco.com/" target="_blank" class="icono-web">
+            <i class="fas fa-globe"></i> <!-- Icono de la web -->
+        </a>
+        <a href="https://www.instagram.com/foco_festival/" target="_blank" class="icono-instagram">
+            <i class="fab fa-instagram"></i> <!-- Icono de Instagram -->
+        </a>
+    </footer>
     <!-- Script para manejar la votación dinámica -->
     <script>
         function mostrarCard() {
