@@ -158,7 +158,7 @@ button:hover {
 }
 
 .stars input:checked ~ label {
-  color: #dc493a; /* Color rojo oscuro cuando están seleccionadas */
+  color: #ffcc00; /* Color rojo oscuro cuando están seleccionadas */
 }
 
 /* Efecto hover que ahora comienza desde la izquierda (primera estrella) */
@@ -177,15 +177,16 @@ button:hover {
 }
 
 .boton-volver {
-  position: absolute; /* Posiciona el botón en relación a su contenedor */
-  top: 10px; /* Ajusta la posición vertical */
-  right: 20px;
+  position: fixed; /* Fija el icono en la pantalla */
+  bottom: 80px; /* Distancia desde el fondo de la pantalla */
+  right: 20px; /* Distancia desde el lado izquierdo */
   background-color: #dc493a;
   color: white;
   padding: 10px 20px;
   text-decoration: none;
   border-radius: 5px;
   font-size: 16px;
+  z-index: 100;
 }
 
 .boton-volver:hover {
@@ -200,10 +201,11 @@ button:hover {
   display: flex; /* Utiliza flexbox para alinear los iconos */
   justify-content: center; /* Centra los iconos en el footer */
   gap: 20px; /* Espaciado entre los iconos */
-  position: absolute; /* Asegura que el footer se mantenga en la parte inferior */
+  position: fixed; /* Asegura que el footer se mantenga en la parte inferior */
   bottom: 0; /* Coloca el footer en la parte inferior */
   left: 0; /* Alinea a la izquierda */
   right: 0; /* Alinea a la derecha */
+  z-index: 100; /* Asegura que esté por encima del contenido */
 }
 
 .icono-web, .icono-instagram {

@@ -172,23 +172,24 @@ def descargar_csv(request, nombre_pase=None):
     writer = csv.writer(response)
 
     # Escribir el encabezado del CSV
-    writer.writerow(['corto_id', 'usuario_id', 'puntuacion'])
+    writer.writerow(['corto_id', 'nombre_usuario', 'puntuacion'])
 
     # Consultar los datos del modelo Votacion, filtrando por nombre del pase si se proporciona
     if nombre_pase:
         # Filtrar las votaciones por el nombre del pase
-        calificaciones = Votacion.objects.filter(corto__pase__pase=nombre_pase).values_list('corto', 'usuario')
+        calificaciones = Votacion.objects.filter(corto__pase__pase=nombre_pase).select_related('usuario').values_list('corto_id', 'usuario__nombre_usuario')
     else:
-        calificaciones = Votacion.objects.all().values_list('corto', 'usuario')
+        calificaciones = Votacion.objects.all().select_related('usuario').values_list('corto_id', 'usuario__nombre_usuario')
 
     # Escribir los datos en el archivo CSV
-    for corto, usuario in calificaciones:
+    for corto_id, nombre_usuario in calificaciones:
         # Generar un número aleatorio entre 0 y 5
         votacion_random = random.randint(0, 5)
         # Escribir la fila en el CSV
-        writer.writerow([corto, usuario, votacion_random])
+        writer.writerow([corto_id, nombre_usuario, votacion_random])
 
     return response
+
 
 def login_view(request):
     get_token(request)
