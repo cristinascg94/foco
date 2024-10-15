@@ -115,7 +115,6 @@
                 const corto_id = this.querySelector('input[name="corto_id"]').value;
                 const usuario_id = this.querySelector('input[name="usuario_id"]').value;
 
-                console.log(usuario_id)
 
                 // Comprobar si el usuario ha seleccionado una puntuación
                 const puntuacionElement = this.querySelector('input[name="puntuacion"]:checked');
@@ -141,8 +140,7 @@
                     'puntuacion': puntuacion
                 });
 
-                console.log(url)
-                console.log(data)
+
 
                 // Enviar la solicitud al backend
                 fetch(url, {

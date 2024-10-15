@@ -49,9 +49,7 @@ def pase(request):
 
 
 def votacion(request, nombre_pase, usuario):
-    print("Entro")
 
-    print(usuario)
 
     # Asegúrate de que el código de usuario es válido
     if usuario:
@@ -115,6 +113,8 @@ def votar(request):
         puntuacion = request.POST.get('puntuacion')
         corto_id = request.POST.get('corto_id')
 
+
+
         usuario = request.POST.get('usuario_id')
 
         if not usuario or not corto_id:
@@ -140,7 +140,7 @@ def get_data_results():
             .annotate(total_votos=Sum('votacion'))
                 .order_by('-total_votos')[:5])
     
-    print(results)
+ 
     
     cortos_con_nombres = []
     for result in results:

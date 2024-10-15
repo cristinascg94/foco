@@ -5,6 +5,7 @@ import random
 import string
 
 
+
 class UsuarioAleatorio(models.Model):
     nombre_usuario = models.CharField(max_length=10, unique=True)
     pase = models.ForeignKey('Pase', on_delete=models.CASCADE, related_name='usuarios')
@@ -45,6 +46,7 @@ class Pase(models.Model):
 
 
 class Corto(models.Model):
+    id = models.AutoField(primary_key=True)
     corto = models.CharField(max_length=255)
     pase = models.ForeignKey('Pase', on_delete=models.CASCADE)
 
@@ -54,18 +56,25 @@ class Corto(models.Model):
         # Obtener los usuarios asociados con este pase
         usuarios = self.pase.usuarios.all()
         
-        # Crear una lista para almacenar las instancias de Votacion
+        # Crear una lista para almacenar las nuevas instancias de Votacion
         votaciones = []
         
-        # Vincular cada usuario al corto a través del modelo Votacion
+        # Vincular cada usuario al corto a través del modelo Votacion, solo si no existe una votación previa
         for usuario in usuarios:
-            votaciones.append(Votacion(
-                corto=self,
-                usuario=usuario,
-                votacion=0  # Valor inicial de la votación
-            ))
+            votacion, created = Votacion.objects.get_or_create(corto=self, usuario=usuario)
+            
+            if created:
+                # Si la votación es nueva, establecer votacion y edicion en 0
+                votacion.votacion = 0
+                votacion.edicion = 0
+                votaciones.append(votacion)  # Añadir la nueva votación a la lista para crearla en batch
+            else:
+                # Si ya existe, actualizar los campos votacion y edicion a 0
+                votacion.votacion = 0
+                votacion.edicion = 0
+                votacion.save()  # Guardar la votación existente actualizada
         
-        # Crear todas las instancias de Votacion de una vez
+        # Crear todas las nuevas instancias de Votacion de una vez
         if votaciones:
             Votacion.objects.bulk_create(votaciones)
 
@@ -79,6 +88,14 @@ class Votacion(models.Model):
     votacion = models.IntegerField(default=0)
     edicion = models.IntegerField(default=0)
 
+    class Meta:
+        # Garantiza que no haya más de una votación por cada combinación de corto y usuario
+        constraints = [
+            models.UniqueConstraint(fields=['corto', 'usuario'], name='unique_corto_usuario')
+        ]
+
 
     def __str__(self):
         return f"Votación de {self.usuario.nombre_usuario} para {self.corto.corto}: {self.votacion}"
+
+
