@@ -49,6 +49,7 @@ class Corto(models.Model):
     id = models.AutoField(primary_key=True)
     corto = models.CharField(max_length=255)
     pase = models.ForeignKey('Pase', on_delete=models.CASCADE)
+    orden = models.IntegerField(unique=True, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         super(Corto, self).save(*args, **kwargs)
