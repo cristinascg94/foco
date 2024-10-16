@@ -54,10 +54,10 @@ def votacion(request, nombre_pase, usuario):
     # Asegúrate de que el código de usuario es válido
     if usuario:
         # Obtener el objeto Pase
-        pase = Pase.objects.get(pase=nombre_pase).order_by('orden')
+        pase = Pase.objects.get(pase=nombre_pase)
 
         # Filtrar los cortos por el pase seleccionado
-        cortos_filtrados = Corto.objects.filter(pase=pase)
+        cortos_filtrados = Corto.objects.filter(pase=pase).order_by('orden')
 
         # Obtener las votaciones del usuario para saber si ha editado
         votaciones_usuario = Votacion.objects.filter(usuario__nombre_usuario=usuario)
