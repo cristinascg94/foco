@@ -27,6 +27,7 @@
                             <tr>
                                 <th>Título del Corto</th>
                                 <th>Total de Votos</th>
+                                <th>Puntuación media</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -35,6 +36,7 @@
                                 <tr>
                                     <td>{{ corto.nombre }}</td>
                                     <td>{{ corto.total_votos }}</td>
+                                    <td>{{ corto.media_votos }}</td>
                                 </tr>
                                 {% endfor %}
                             {% else %}

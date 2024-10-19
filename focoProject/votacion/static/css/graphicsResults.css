@@ -56,8 +56,13 @@ header h1 {
   margin-bottom: 1rem;
 }
 
+.table-container {
+  display: flex;
+  justify-content: center; /* Centra la tabla horizontalmente */
+}
+
 table {
-  width: 100%; /* Ajusta el ancho de la tabla al 100% del contenedor */
+  width: auto; /* Ajusta el ancho de la tabla a su contenido */
   border-collapse: collapse; /* Colapsa los bordes de la tabla */
   border: 2px solid white;
 }
@@ -76,8 +81,11 @@ td {
   padding: 10px; /* Espaciado interno para las celdas de contenido */
   border: 1px solid white;
 }
-td:nth-child(2) {
-  text-align: center; /* Centra el texto en la segunda columna */
+
+td:nth-child(2),
+td:nth-child(3),
+td:nth-child(4) {
+  text-align: center; /* Centra el texto en las columnas 2, 3 y 4 */
 }
 /* Media queries para pantallas más grandes */
 @media (min-width: 768px) {

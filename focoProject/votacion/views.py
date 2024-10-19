@@ -8,12 +8,12 @@ from docx.shared import Pt
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 import csv
-from django.db.models import Sum
+from django.db.models import Sum, Count, Avg
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.middleware.csrf import get_token
 import random
-
+from django.db.models.functions import Round
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -135,19 +135,25 @@ def votar(request):
         return JsonResponse({'error': 'Método no permitido'}, status=405)
     
 def get_data_results():
-    results= (Votacion.objects
+    results = (Votacion.objects
+            .filter(edicion=1)  # Filtras por edicion=1
             .values('corto_id')
-            .annotate(total_votos=Sum('votacion'))
-                .order_by('-total_votos')[:5])
+            .annotate(
+                total_votos=Sum('votacion'),  # Suma por corto_id
+                conteo_votos=Count('votacion'),  # Conteo por corto_id
+                media_votos=Round(Avg('votacion'), 2)  # Media por corto_id
+            )
+            .order_by('-media_votos'))
     
  
-    
     cortos_con_nombres = []
     for result in results:
         corto_obj = Corto.objects.get(id=result['corto_id'])
         cortos_con_nombres.append({
             'nombre': corto_obj.corto,  # Asegúrate de que el modelo Corto tiene un campo 'nombre'
-            'total_votos': result['total_votos']
+            'total_votos': result['total_votos'],
+            'personas_votando': result['conteo_votos'],
+            'media_votos': result['media_votos']
         })
 
     print(cortos_con_nombres)
